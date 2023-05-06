@@ -67,10 +67,7 @@ class LLMPredictor:
     def get_llm_metadata(self) -> LLMMetadata:
         """Get LLM metadata."""
         # TODO: refactor mocks in unit tests, this is a stopgap solution
-        if hasattr(self, "_llm"):
-            return _get_llm_metadata(self._llm)
-        else:
-            return LLMMetadata()
+        return _get_llm_metadata(self._llm) if hasattr(self, "_llm") else LLMMetadata()
 
     def _predict(self, prompt: Prompt, **prompt_args: Any) -> str:
         """Inner predict function."""
@@ -79,8 +76,7 @@ class LLMPredictor:
         # Note: we don't pass formatted_prompt to llm_chain.predict because
         # langchain does the same formatting under the hood
         full_prompt_args = prompt.get_full_format_args(prompt_args)
-        llm_prediction = llm_chain.predict(**full_prompt_args)
-        return llm_prediction
+        return llm_chain.predict(**full_prompt_args)
 
     def predict(self, prompt: Prompt, **prompt_args: Any) -> Tuple[str, str]:
         """Predict the answer to a query.
@@ -114,9 +110,7 @@ class LLMPredictor:
     @property
     def last_token_usage(self) -> int:
         """Get the last token usage."""
-        if self._last_token_usage is None:
-            return 0
-        return self._last_token_usage
+        return 0 if self._last_token_usage is None else self._last_token_usage
 
     @last_token_usage.setter
     def last_token_usage(self, value: int) -> None:

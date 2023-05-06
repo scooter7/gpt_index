@@ -93,10 +93,9 @@ class GPTTreeIndex(BaseGPTIndex[IndexGraph]):
             self._llm_predictor,
             self._prompt_helper,
         )
-        index_graph = index_builder.build_from_text(
+        return index_builder.build_from_text(
             documents, build_tree=self.build_tree, verbose=verbose
         )
-        return index_graph
 
     def _insert(self, document: BaseDocument, **insert_kwargs: Any) -> None:
         """Insert a document."""

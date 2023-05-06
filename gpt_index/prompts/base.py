@@ -44,7 +44,7 @@ class Prompt:
         Return an instance of itself.
 
         """
-        for k in kwargs.keys():
+        for k in kwargs:
             if k not in self.input_variables:
                 raise ValueError(
                     f"Invalid input variable: {k}, not found in input_variables"
@@ -66,11 +66,11 @@ class Prompt:
         """
         template = prompt.prompt.template
         tmpl_vars = {v for _, v, _, _ in Formatter().parse(template) if v is not None}
-        format_dict = {}
-        for var in tmpl_vars:
-            if var not in prompt.partial_dict:
-                format_dict[var] = f"{{{var}}}"
-
+        format_dict = {
+            var: f"{{{var}}}"
+            for var in tmpl_vars
+            if var not in prompt.partial_dict
+        }
         template_str = prompt.format(**format_dict)
         cls_obj: PMT = cls(template_str, **prompt.prompt_kwargs)
         return cls_obj
@@ -81,7 +81,7 @@ class Prompt:
 
     def format(self, **kwargs: Any) -> str:
         """Format the prompt."""
-        kwargs.update(self.partial_dict)
+        kwargs |= self.partial_dict
         return self.prompt.format(**kwargs)
 
     def get_full_format_args(self, kwargs: Dict) -> Dict[str, Any]:

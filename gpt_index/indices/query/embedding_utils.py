@@ -14,7 +14,7 @@ def get_top_k_embeddings(
 ) -> Tuple[List[float], List]:
     """Get top nodes by similarity to the query."""
     if embedding_ids is None:
-        embedding_ids = [i for i in range(len(embeddings))]
+        embedding_ids = list(range(len(embeddings)))
 
     similarities = []
     for emb in embeddings:

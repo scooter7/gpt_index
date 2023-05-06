@@ -29,7 +29,7 @@ class TokenTextSplitter(TextSplitter):
 
     def split_text(self, text: str) -> List[str]:
         """Split incoming text and return chunks."""
-        if text == "":
+        if not text:
             return []
         # First we naively split the large input into a bunch of smaller ones.
         splits = text.split(self._separator)
@@ -60,7 +60,7 @@ class TokenTextSplitter(TextSplitter):
 
     def truncate_text(self, text: str) -> str:
         """Truncate text in order to fit the underlying chunk size."""
-        if text == "":
+        if not text:
             return ""
         # First we naively split the large input into a bunch of smaller ones.
         splits = text.split(self._separator)

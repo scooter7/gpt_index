@@ -19,10 +19,7 @@ def extract_numbers_given_response(response: str, n: int = 1) -> Optional[List[i
 
     """
     numbers = re.findall(r"\d+", response)
-    if len(numbers) == 0:
-        return None
-    else:
-        return numbers[:n]
+    return None if len(numbers) == 0 else numbers[:n]
 
 
 def expand_tokens_with_subtokens(tokens: Set[str]) -> Set[str]:
@@ -39,4 +36,4 @@ def expand_tokens_with_subtokens(tokens: Set[str]) -> Set[str]:
 
 def truncate_text(text: str, max_length: int) -> str:
     """Truncate text to a maximum length."""
-    return text[: max_length - 3] + "..."
+    return f"{text[:max_length - 3]}..."

@@ -105,12 +105,11 @@ class BaseGPTKeywordTableIndex(BaseGPTIndex[KeywordTable]):
 
     def _delete(self, doc_id: str, **delete_kwargs: Any) -> None:
         """Delete a document."""
-        # get set of ids that correspond to node
-        node_idxs_to_delete = set()
-        for node_idx, node in self._index_struct.text_chunks.items():
-            if node.ref_doc_id != doc_id:
-                continue
-            node_idxs_to_delete.add(node_idx)
+        node_idxs_to_delete = {
+            node_idx
+            for node_idx, node in self._index_struct.text_chunks.items()
+            if node.ref_doc_id == doc_id
+        }
         for node_idx in node_idxs_to_delete:
             del self._index_struct.text_chunks[node_idx]
 
@@ -141,5 +140,4 @@ class GPTKeywordTableIndex(BaseGPTKeywordTableIndex):
             self.keyword_extract_template,
             text=text,
         )
-        keywords = extract_keywords_given_response(response)
-        return keywords
+        return extract_keywords_given_response(response)

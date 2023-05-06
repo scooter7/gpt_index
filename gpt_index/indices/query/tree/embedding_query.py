@@ -80,12 +80,9 @@ class GPTTreeIndexEmbeddingQuery(GPTTreeIndexLeafQuery):
                 f"{' '.join(selected_node.get_text().splitlines())}"
             )
 
-        # Get the response for the selected node
-        response = self._query_with_selected_node(
+        return self._query_with_selected_node(
             selected_node, query_str, level=level, verbose=verbose
         )
-
-        return response
 
     def _get_query_text_embedding_similarities(
         self, query_str: str, nodes: List[Node]

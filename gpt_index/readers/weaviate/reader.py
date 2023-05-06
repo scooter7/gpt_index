@@ -76,7 +76,7 @@ class WeaviateReader(BaseReader):
 
         response = self.client.query.raw(graphql_query)
         if "errors" in response:
-            raise ValueError("Invalid query, got errors: {}".format(response["errors"]))
+            raise ValueError(f'Invalid query, got errors: {response["errors"]}')
 
         data_response = response["data"]
         if "Get" not in data_response:

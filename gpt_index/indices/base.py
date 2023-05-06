@@ -202,8 +202,7 @@ class BaseGPTIndex(Generic[IS]):
 
     def delete(self, doc_id: str, **delete_kwargs: Any) -> None:
         """Delete a document."""
-        full_delete = delete_kwargs.pop("full_delete", True)
-        if full_delete:
+        if full_delete := delete_kwargs.pop("full_delete", True):
             self._docstore.delete_document(doc_id)
         self._delete(doc_id, **delete_kwargs)
 
@@ -250,7 +249,6 @@ class BaseGPTIndex(Generic[IS]):
                 verbose=verbose,
                 recursive=True,
             )
-            return query_runner.query(query_str, self._index_struct)
         else:
             self._preprocess_query(mode_enum, query_kwargs)
             # TODO: pass in query config directly
@@ -267,7 +265,8 @@ class BaseGPTIndex(Generic[IS]):
                 verbose=verbose,
                 recursive=False,
             )
-            return query_runner.query(query_str, self._index_struct)
+
+        return query_runner.query(query_str, self._index_struct)
 
     @classmethod
     def load_from_disk(cls, save_path: str, **kwargs: Any) -> "BaseGPTIndex":

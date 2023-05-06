@@ -81,10 +81,7 @@ class BaseGPTIndexQuery(Generic[IS]):
         self._index_struct = index_struct
         # create a _llm_predictor_set flag to get around mypy typing
         # hassles of keeping _llm_predictor as optional type
-        if llm_predictor is None:
-            self._llm_predictor_set = False
-        else:
-            self._llm_predictor_set = True
+        self._llm_predictor_set = llm_predictor is not None
         self._llm_predictor = llm_predictor or LLMPredictor()
         self._docstore = docstore
         self._query_runner = query_runner

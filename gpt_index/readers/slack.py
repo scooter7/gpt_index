@@ -30,11 +30,11 @@ class SlackReader(BaseReader):
             )
         if slack_token is None:
             slack_token = os.environ["SLACK_BOT_TOKEN"]
-            if slack_token is None:
-                raise ValueError(
-                    "Must specify `slack_token` or set environment "
-                    "variable `SLACK_BOT_TOKEN`."
-                )
+        if slack_token is None:
+            raise ValueError(
+                "Must specify `slack_token` or set environment "
+                "variable `SLACK_BOT_TOKEN`."
+            )
         self.client = WebClient(token=slack_token)
         res = self.client.api_test()
         if not res["ok"]:
@@ -55,15 +55,13 @@ class SlackReader(BaseReader):
             )
             try:
                 messages = result["messages"]
-                for message in messages:
-                    messages_text.append(message["text"])
-
+                messages_text.extend(message["text"] for message in messages)
                 if not result["has_more"]:
                     break
 
                 next_cursor = result["response_metadata"]["next_cursor"]
             except SlackApiError as e:
-                logger.error("Error parsing conversation replies: {}".format(e))
+                logger.error(f"Error parsing conversation replies: {e}")
 
         return "\n\n".join(messages_text)
 
@@ -86,20 +84,17 @@ class SlackReader(BaseReader):
                 result = self.client.conversations_history(channel=channel_id)
                 conversation_history = result["messages"]
                 # Print results
-                logger.info(
-                    "{} messages found in {}".format(len(conversation_history), id)
+                logger.info(f"{len(conversation_history)} messages found in {id}")
+                result_messages.extend(
+                    self._read_message(channel_id, message["ts"])
+                    for message in conversation_history
                 )
-                for message in conversation_history:
-                    result_messages.append(
-                        self._read_message(channel_id, message["ts"])
-                    )
-
                 if not result["has_more"]:
                     break
                 next_cursor = result["response_metadata"]["next_cursor"]
 
             except SlackApiError as e:
-                logger.error("Error creating conversation: {}".format(e))
+                logger.error(f"Error creating conversation: {e}")
 
         return "\n\n".join(result_messages)
 
