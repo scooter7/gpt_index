@@ -40,7 +40,6 @@ class GPTTreeIndexRetQuery(BaseGPTIndexQuery[IndexGraph]):
             self.refine_template,
             texts=[TextChunk(node_text)],
         )
-        response = response_builder.get_response(
+        return response_builder.get_response(
             query_str, verbose=verbose, mode=self._response_mode
         )
-        return response

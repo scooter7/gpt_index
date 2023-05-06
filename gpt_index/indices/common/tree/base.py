@@ -43,7 +43,7 @@ class GPTTreeIndexBuilder:
             self.summary_prompt, self.num_children
         )
         text_chunks = text_splitter.split_text(document.get_text())
-        doc_nodes = {
+        return {
             (start_idx + i): Node(
                 text=t,
                 index=(start_idx + i),
@@ -52,7 +52,6 @@ class GPTTreeIndexBuilder:
             )
             for i, t in enumerate(text_chunks)
         }
-        return doc_nodes
 
     def build_from_text(
         self,
@@ -68,7 +67,7 @@ class GPTTreeIndexBuilder:
         """
         all_nodes: Dict[int, Node] = {}
         for d in documents:
-            all_nodes.update(self._get_nodes_from_document(len(all_nodes), d))
+            all_nodes |= self._get_nodes_from_document(len(all_nodes), d)
 
         if build_tree:
             # instantiate all_nodes from initial text chunks
@@ -115,7 +114,7 @@ class GPTTreeIndexBuilder:
             new_node_dict[cur_index] = new_node
             cur_index += 1
 
-        all_nodes.update(new_node_dict)
+        all_nodes |= new_node_dict
 
         if len(new_node_dict) <= self.num_children:
             return new_node_dict

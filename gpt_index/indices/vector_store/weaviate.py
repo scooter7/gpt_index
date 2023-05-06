@@ -64,14 +64,14 @@ class GPTWeaviateIndex(BaseGPTIndex[WeaviateIndexStruct]):
             raise ValueError(import_err_msg)
 
         self.client = cast(Client, weaviate_client)
-        if index_struct is not None:
-            if class_prefix is not None:
-                raise ValueError(
-                    "class_prefix must be None when index_struct is not None."
-                )
-            self.class_prefix = index_struct.get_class_prefix()
-        else:
+        if index_struct is None:
             self.class_prefix = class_prefix or get_default_class_prefix()
+        elif class_prefix is not None:
+            raise ValueError(
+                "class_prefix must be None when index_struct is not None."
+            )
+        else:
+            self.class_prefix = index_struct.get_class_prefix()
         # try to create schema
         WeaviateNode.create_schema(self.client, self.class_prefix)
 

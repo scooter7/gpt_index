@@ -97,9 +97,7 @@ class GPTTreeIndexLeafQuery(BaseGPTIndexQuery[IndexGraph]):
                 verbose=verbose,
             )
 
-        if prev_response is None:
-            return cur_response
-        else:
+        if prev_response is not None:
             context_msg = "\n".join([selected_node.get_text(), cur_response])
             cur_response, formatted_refine_prompt = self._llm_predictor.predict(
                 self.refine_template,
@@ -111,7 +109,7 @@ class GPTTreeIndexLeafQuery(BaseGPTIndexQuery[IndexGraph]):
             if verbose:
                 print(f">[Level {level}] Refine prompt: {formatted_refine_prompt}")
                 print(f">[Level {level}] Current refined response: {cur_response} ")
-            return cur_response
+        return cur_response
 
     def _query_level(
         self,

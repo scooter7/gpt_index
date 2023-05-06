@@ -50,10 +50,9 @@ class GPTTreeIndexSummarizeQuery(BaseGPTIndexQuery[IndexGraph]):
             self.refine_template,
             texts=sorted_node_txts,
         )
-        response = response_builder.get_response(
+        return response_builder.get_response(
             query_str,
             verbose=verbose,
             mode=ResponseMode.TREE_SUMMARIZE,
             num_children=self.num_children,
         )
-        return response

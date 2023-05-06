@@ -58,8 +58,7 @@ class BaseWeaviateIndexStruct(Generic[IS]):
         class_name = cls._class_name(class_prefix)
         properties = cls._get_common_properties() + cls._get_properties()
         prop_names = [p["name"] for p in properties]
-        entry = get_by_id(client, object_id, class_name, prop_names)
-        return entry
+        return get_by_id(client, object_id, class_name, prop_names)
 
     @classmethod
     def create_schema(cls, client: Any, class_prefix: str) -> None:
@@ -118,10 +117,7 @@ class BaseWeaviateIndexStruct(Generic[IS]):
         parsed_result = parse_get_response(query_result)
         entries = parsed_result[class_name]
 
-        results: List[IS] = []
-        for entry in entries:
-            results.append(cls._entry_to_gpt_index(entry))
-
+        results: List[IS] = [cls._entry_to_gpt_index(entry) for entry in entries]
         return results
 
     @classmethod
